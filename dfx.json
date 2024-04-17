@@ -1,0 +1,27 @@
+{
+  "canisters": {
+    "Kadudu_backend": {
+      "candid": "src/Kadudu_backend/Kadudu_backend.did",
+      "package": "Kadudu_backend",
+      "type": "rust"
+    },
+    "Kadudu_frontend": {
+      "dependencies": [
+        "Kadudu_backend"
+      ],
+      "source": [
+        "src/Kadudu_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "Kadudu_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
