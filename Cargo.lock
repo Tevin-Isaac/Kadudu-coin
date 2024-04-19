@@ -9,8 +9,6 @@ dependencies = [
  "candid",
  "ic-cdk",
  "ic-cdk-timers",
- "icrc1_ledger_canister",
- 
 ]
 
 [[package]]

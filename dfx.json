@@ -3,7 +3,6 @@
     "Kadudu_backend": {
       "candid": "src/Kadudu_backend/Kadudu_backend.did",
       "package": "Kadudu_backend",
-      "dependencies": ["icrc1_ledger_canister"],
       "type": "rust",
       "declarations": {
         "node_compatibility": true

@@ -1,28 +1,25 @@
 use std::collections::HashMap;
 use candid::CandidType;
-use candid::Nat;
-use ic_cdk::candid::{CandidType, Principal};
-use icrc1_ledger_canister::ICRCLedger;
-
-#[derive(CandidType)]
+use candid::Principal;
+#[derive(CandidType, Default)]
 struct ICRC1MemeToken {
-    id: Nat,
+    id: u64,
     name: String,
     symbol: String,
-    total_supply: Nat,
-    ledger: HashMap<Principal, Nat>,
+    total_supply: u64,
+    ledger: HashMap<Principal, u64>,
     meme_url: String,
     meme_description: String,
-    meme_creator: Principal,
+    meme_creator: String,
 }
 
 impl ICRC1MemeToken {
     pub fn new(
-        id: Nat,
-        total_supply: Nat,
+        id: u64,
+        total_supply: u64,
         meme_url: String,
         meme_description: String,
-        meme_creator: Principal,
+        meme_creator: String,
     ) -> Self {
         ICRC1MemeToken {
             id,
@@ -36,11 +33,11 @@ impl ICRC1MemeToken {
         }
     }
 
-    pub fn transfer(&mut self, from: Principal, to: Principal, amount: Nat) -> Result<(), String> {
-        if let Some(balance) = self.ledger.get_mut(&from) {
+    pub fn transfer(&mut self, from: Principal, to: Principal, amount: u64) -> Result<(), String> {
+        if let Some(balance) = self.ledger.get(&from) {
             if *balance >= amount {
-                *balance -= amount;
-                *self.ledger.entry(to).or_insert(0) += amount;
+                let new_balance: u64 = balance - amount;
+                self.ledger.insert(to, new_balance);
                 Ok(())
             } else {
                 Err("Insufficient balance".to_string())
@@ -50,16 +47,18 @@ impl ICRC1MemeToken {
         }
     }
 
-    pub fn balance_of(&self, account: Principal) -> Nat {
-        *self.ledger.get(&account).unwrap_or(&0)
+    pub fn balance_of(&self, account: Principal) -> u64 {
+        let amount :u64 = *self.ledger.get(&account).unwrap_or(&0);
+        amount
     }
 
-    pub fn mint(&mut self, to: Principal, amount: Nat) {
-        *self.ledger.entry(to).or_insert(0) += amount;
+    pub fn mint(&mut self, to: Principal, amount: u64) {
+        let balance :u64 = *self.ledger.get(&to).unwrap_or(&0);
+        self.ledger.insert(to, balance + amount);
         self.total_supply += amount;
     }
 
-    pub fn burn(&mut self, from: Principal, amount: Nat) -> Result<(), String> {
+    pub fn burn(&mut self, from: Principal, amount: u64) -> Result<(), String> {
         if let Some(balance) = self.ledger.get_mut(&from) {
             if *balance >= amount {
                 *balance -= amount;
@@ -73,11 +72,13 @@ impl ICRC1MemeToken {
         }
     }
 
-    pub fn get_meme_creator(&self) -> Principal {
-        self.meme_creator
+    pub fn get_meme_creator(&self) -> String {
+        self.meme_creator.clone()
     }
 
     pub fn get_meme_description(&self) -> String {
         self.meme_description.clone()
     }
 }
+// need this to generate candid
+ic_cdk::export_candid!();

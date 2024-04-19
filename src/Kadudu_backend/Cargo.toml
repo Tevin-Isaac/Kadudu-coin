@@ -12,4 +12,3 @@ crate-type = ["cdylib"]
 candid = "0.10"
 ic-cdk = "0.12"
 ic-cdk-timers = "0.6" # Feel free to remove this dependency if you don't need timers
-icrc1_ledger_canister = "0.1.0"
