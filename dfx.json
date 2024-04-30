@@ -1,9 +1,11 @@
 {
   "canisters": {
     "Kadudu_backend": {
+      "build": "cargo build --target wasm32-unknown-unknown --release",
       "candid": "src/Kadudu_backend/Kadudu_backend.did",
+      "wasm": "target/wasm32-unknown-unknown/release/opt.wasm",
       "package": "Kadudu_backend",
-      "type": "rust",
+      "type": "custom",
       "declarations": {
         "node_compatibility": true
       }
@@ -41,6 +43,12 @@
     "build": {
       "args": "",
       "packtool": ""
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
     }
   },
   "output_env_file": ".env",
